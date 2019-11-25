@@ -1,0 +1,5 @@
+{
+    "libraries" : [ ":libtensorflow_framework.so.2" ],
+    "library_dirs" : [ "/soft/datascience/tensorflow/tf2.0-py36/tensorflow_core" ],
+    "include_dirs" : [ "/soft/datascience/tensorflow/tf2.0-py36/tensorflow_core/include" ]
+}
