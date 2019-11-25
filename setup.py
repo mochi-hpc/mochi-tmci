@@ -11,9 +11,10 @@ import sys
 
 # Find tensorflow headers and libraries
 tf_info = {
-        'libraries'    : None,
-        'library_dirs' : None,
-        'include_dirs' : None
+        'libraries'      : None,
+        'library_dirs'   : None,
+        'include_dirs'   : None,
+        'extra_cxxflags' : None
         }
 try:
     with open('tensorflow.json') as f:
@@ -37,6 +38,8 @@ pybind11_path = os.path.dirname(pybind11.__file__)
 pybind11_include_dir = '/'.join(pybind11_path.split('/')[0:-4] + ['include'])
 
 cxxflags = ['-std=c++14', '-g']
+if tf_info['extra_cxxflags'] is not None:
+    cxxflags.extend(tf_info['extra_cxxflags'])
 
 (opt,) = get_config_vars('OPT')
 os.environ['OPT'] = " ".join(flag for flag in opt.split() if flag != '-Wstrict-prototypes')
