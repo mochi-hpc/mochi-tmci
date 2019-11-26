@@ -3,6 +3,7 @@
 #include "tensorflow/core/framework/op_kernel.h"
 #include <iostream>
 #include <functional>
+#include "backend.hpp"
 
 using namespace tensorflow;
 using shape_inference::DimensionHandle;
@@ -29,22 +30,23 @@ class TMCICheckpointOp : public OpKernel {
         std::string config;
         OP_REQUIRES_OK(context, context->GetAttr("backend", &backend));
         OP_REQUIRES_OK(context, context->GetAttr("config", &config));
+        m_backend = tmci::Backend::Create(backend.c_str(), config.c_str());
     }
 
     void Compute(OpKernelContext* context) override {
         unsigned n = context->num_inputs();
-        std::vector<std::pair<void*, size_t>> segments(n);
+        std::vector<std::reference_wrapper<const tensorflow::Tensor>> tensors;
+        tensors.reserve(n);
         for(unsigned i=0; i < n; i++) {
-            auto& tensor = context->input(i);
-            segments[i].first  = static_cast<void*>(
-                    const_cast<char*>(tensor.tensor_data().data()));
-            segments[i].second = tensor.tensor_data().size();
+            tensors.push_back(std::cref(context->input(i)));
         }
-/*
-        OP_REQUIRES(context, status.first == 0,
-                errors::Internal(status.second));
-                */
+        int status = m_backend->Save(tensors);
+        OP_REQUIRES(context, status == 0, errors::Internal(status));
     }
+
+    private:
+
+    std::unique_ptr<tmci::Backend> m_backend;
 
 };
 
