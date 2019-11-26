@@ -21,7 +21,7 @@ class Backend {
 
     virtual int Save(const std::vector<std::reference_wrapper<const tensorflow::Tensor>>& tensors) = 0;
 
-    virtual int Load(const std::vector<tensorflow::Tensor>& tensors) = 0;
+    virtual int Load(const std::vector<std::reference_wrapper<const tensorflow::Tensor>>& tensors) = 0;
 
     static std::unique_ptr<Backend> Create(const char* name, const char* config);
 

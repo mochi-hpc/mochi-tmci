@@ -13,7 +13,7 @@ Backend::Backend() {}
 Backend::~Backend() {}
 
 std::unique_ptr<tmci::Backend> Backend::Create(const char* name, const char* config) {
-    if(_backend_factories.count(config) == 0)
+    if(_backend_factories.count(name) == 0)
         throw std::runtime_error("TMCI backend not found");
     return _backend_factories[name](config);
 }
