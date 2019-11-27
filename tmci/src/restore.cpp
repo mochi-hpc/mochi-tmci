@@ -20,6 +20,12 @@ REGISTER_OP("TmciRestore")
             return Status::OK();
     });
 
+/**
+ * @brief Generic restore operation for Tensorflow.
+ * This operation takes a backend name, a configuration,
+ * and a list of tensors. It instanciates the request
+ * backend and calls its Load function.
+ */
 class TMCIRestoreOp : public OpKernel {
 
     public:

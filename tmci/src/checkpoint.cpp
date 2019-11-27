@@ -20,6 +20,12 @@ REGISTER_OP("TmciCheckpoint")
             return Status::OK();
     });
 
+/**
+ * @brief Generic checkpoint operation for Tensorflow.
+ * This operation takes a backend name, a configuration,
+ * and a list of tensors. It instanciates the request
+ * backend and calls its Save function.
+ */
 class TMCICheckpointOp : public OpKernel {
 
     public:
