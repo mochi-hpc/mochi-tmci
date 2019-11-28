@@ -115,3 +115,54 @@ then the plugin will be invoked twice to checkpoint (first through the
 `CheckpointCallback` class, then through the `save_weights` function) and once
 to reload (through the `load_weights` function), displaying a list of 25 tensors
 each time.
+
+Installing on Theta
+-------------------
+
+Load the required modules.
+```
+module swap PrgEnv-intel PrgEnv-gnu
+module load cce
+module load datascience/tensorflow-2.0
+module load cmake/3.14.5
+```
+
+Clone TMCI.
+```
+git clone https://xgitlab.cels.anl.gov/sds/tmci.git
+cd tmci
+
+```
+Copy *theta/tensorflow.json* in the root of the source tree.
+```
+cp theta/tensorflow.json .
+```
+
+Build and install TMCI (locally).
+```
+python setup install --user
+```
+
+TMCI will be located in `~/.local/`.
+
+Go to the plugin directory, copy the *CMakeLists.txt* file that is in the
+*theta* directory, then make a *build* directory and build the plugin.
+```
+cd plugin
+cp ../theta/CMakeLists.txt .
+mkdir build
+cd build
+cmake ..
+make
+```
+
+You should obtain a *libdummy.so* in *build/src*.
+
+Go back to the root of the source tree and launch a job using qsub.
+```
+cd ../..
+qsub -A <your-project> theta/run.qsub
+```
+
+*run.qsub* will first call *theta/common.sh* to load the required modules,
+then call *example/lenet5.py* using `aprun`.
