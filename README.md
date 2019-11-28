@@ -1,12 +1,12 @@
-What is TMCI
-============
+What is TMCI?
+=============
 
 TMCI is a generic interface for checkpointing and reloading Tensorflow models.
 It is based on plugins that are loaded from dynamic libraries. TMCI allows
 direct access to tensors memory to prevent data copies during checkpoints.
 
-Installing
-----------
+Installing TMCI on a workstation
+--------------------------------
 
 TMCI requires the following dependencies.
 *  Python 3.6 or greater
@@ -116,8 +116,8 @@ then the plugin will be invoked twice to checkpoint (first through the
 to reload (through the `load_weights` function), displaying a list of 25 tensors
 each time.
 
-Installing on Theta
--------------------
+Installing and running TMCI on Theta
+------------------------------------
 
 Load the required modules.
 ```
