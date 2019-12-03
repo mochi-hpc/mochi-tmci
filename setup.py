@@ -22,7 +22,7 @@ except:
     pass
 
 if tf_info['libraries'] is None:
-    tf_info['libraries'] = ':libtensorflow_framework.so.2'
+    tf_info['libraries'] = [ ':libtensorflow_framework.so.2' ]
 if tf_info['library_dirs'] is None:
     import tensorflow as tf
     path = os.path.dirname(tf.__file__)
