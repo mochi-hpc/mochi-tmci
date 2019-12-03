@@ -35,14 +35,9 @@ def load_weights(model, backend, config="",
     if include_optimizer:
         for w in model.optimizer.weights:
             tensors.append(w)
-#    eager = tf.executing_eagerly()
-#    if eager:
-#        disable_eager_execution()
     ops.restore(backend=backend,
             config=config,
-            tensors=tensors) #.run()
-#    if eager:
-#        enable_eager_execution()
+            tensors=tensors)
 
 class CheckpointCallback(Callback):
     """Generic TMCI checkpoint callback class."""
