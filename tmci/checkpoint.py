@@ -1,3 +1,4 @@
+import numpy as np
 import tensorflow as tf
 from tensorflow.keras.callbacks import Callback
 from tensorflow.keras import backend as K
@@ -16,6 +17,7 @@ def save_weights(model, backend, config="",
         for w in l.weights:
             tensors.append(w)
     if include_optimizer:
+        model._make_train_function()
         for w in model.optimizer.weights:
             tensors.append(w)
     ops.checkpoint(backend=backend,
@@ -33,7 +35,9 @@ def load_weights(model, backend, config="",
         for w in l.weights:
             tensors.append(w)
     if include_optimizer:
+        model._make_train_function()
         for w in model.optimizer.weights:
+            w.assign(np.zeros(w.shape))
             tensors.append(w)
     ops.restore(backend=backend,
             config=config,
