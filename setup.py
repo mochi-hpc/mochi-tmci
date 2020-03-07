@@ -3,10 +3,27 @@ from distutils.extension import Extension
 from distutils.sysconfig import get_config_vars
 from distutils.command.build_clib import build_clib
 from distutils.command.build_ext import build_ext
+from distutils.command.install_headers import install_headers as install_headers_orig
 import json
 import os
 import os.path
 import sys
+
+class install_headers(install_headers_orig):
+    """The install_headers command is redefined to
+    remove the "python3.Xm" in the installation path"""
+
+    def run(self):
+        a = self.install_dir.split('/')
+        if 'python' in a[-2]:
+            del a[-2]
+        self.install_dir = '/'.join(a)
+        headers = self.distribution.headers or []
+        for header in headers:
+            self.mkpath(self.install_dir)
+            (out, _) = self.copy_file(header, self.install_dir)
+            self.outfiles.append(out)
+
 
 # Find tensorflow headers and libraries
 tf_info = {
@@ -58,5 +75,6 @@ setup(name='tmci',
       description='''Python library to access TensorFlow tensors memory in C++ for checkpoint/restart''',
       ext_modules=[ tmci_op_module ],
       packages=['tmci'],
+      cmdclass={'install_headers': install_headers},
       headers=['tmci/src/backend.hpp']
     )
