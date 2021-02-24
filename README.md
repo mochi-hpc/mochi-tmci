@@ -47,7 +47,7 @@ Understanding TMCI and plugins
 ------------------------------
 
 The best way to understand TMCI is to look at
-[example/lenet5.py](https://xgitlab.cels.anl.gov/sds/tmci/blob/master/example/lenet5.py).
+[example/lenet5.py](example/lenet5.py).
 This python program creates a LeNet5 neural network, trains it, and evaluates it.
 During training, it uses a `tmci.checkpoint.CheckpointCallback` object to
 checkpoint the model at every epoch. After training, it uses the
@@ -58,7 +58,7 @@ functionalities that TMCI offers.
 TMCI itself does not implement checkpointing. The actual implementation of
 checkpointing features is done through plugins. A plugin is a dynamic library
 containing the definition of a class inheriting from
-[tmci::Backend](https://xgitlab.cels.anl.gov/sds/tmci/blob/master/tmci/src/backend.hpp).
+[tmci::Backend](tmci/src/backend.hpp).
 Such a backend implementation is identified by a *name* and must provide two
 functions, `Save` and `Load`, which respectively store and reload the data
 associated with a set of tensors. The constructor of such a backend implementation
@@ -66,7 +66,7 @@ must take a `const char*` null-terminated string representing plugin parameters
 (it is up to the implementation to choose a particular format, such as
 a serialized JSON dictionary, or a comma-separated list of parameters, etc.).
 
-In [example/lenet5.py](https://xgitlab.cels.anl.gov/sds/tmci/blob/master/example/lenet5.py),
+In [example/lenet5.py](example/lenet5.py),
 the `tmci.plugins.load` function loads the dynamic library containing the implementation
 of a particular plugin (here *libdummy.so*). The
 `tmci.checkpoint.CheckpointCallback` class, `tmci.checkpoint.save_weights`
@@ -75,7 +75,7 @@ string argument that identifies which plugin should be used for checkpointing or
 reloading the data.
 
 An example of such a plugin, called *dummy*, is provided in the
-[plugin](https://xgitlab.cels.anl.gov/sds/tmci/tree/master/plugin) folder.
+[plugin](plugin) folder.
 This folder is independent from the rest of the TMCI code, and is not built by
 TMCI, so feel free to make a copy of it and modify its content when you want to
 implement your own plugin.
@@ -94,11 +94,11 @@ You may need to edit line 16 of the CMakeLists.txt to replace
 directory in your system.
 
 Let's now take a look at the source of the plugin.
-[DummyBackend.hpp](https://xgitlab.cels.anl.gov/sds/tmci/blob/master/plugin/src/DummyBackend.hpp)
+[DummyBackend.hpp](plugin/src/DummyBackend.hpp)
 contains the definition of the *DummyBackend* class, which provides simple
 Save and Load methods taking a vector of references to tensors, and print out
 the address and the size (in bytes) of these tensors.
-[DummyBackend.cpp](https://xgitlab.cels.anl.gov/sds/tmci/blob/master/plugin/src/DummyBackend.cpp)
+[DummyBackend.cpp](plugin/src/DummyBackend.cpp)
 calls the `TMCI_REGISTER_BACKEND` macro to register the *DummyBackend* class
 as a backend for TMCI. This macro takes the name of the backend (without quotation
 marks) as first argument, and the name of the class as second argument. The
